@@ -12,7 +12,7 @@ export default function SkillBadges() {
   const reduce = useReducedMotion();
 
   return (
-    <div className="relative mx-auto mt-6 flex w-full max-w-3xl flex-wrap items-center justify-center gap-3 px-4 sm:mt-0 sm:absolute sm:left-1/2 sm:top-1/2 sm:w-auto sm:-translate-x-[220%] sm:-translate-y-1/2 sm:flex-col">
+    <div className="relative mx-auto mt-6 flex w-full max-w-3xl flex-wrap items-center justify-center gap-3 px-4 sm:mt-0 sm:absolute sm:left-1/2 sm:top-1/2 sm:w-auto sm:-translate-x-[240%] sm:-translate-y-1/2 sm:flex-col">
       {BADGES.map((badge, i) => (
         <motion.div
           key={badge.label}

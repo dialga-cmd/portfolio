@@ -6,7 +6,6 @@ import { Chibi, DialogueBox, HudFrame, SkillBadges } from "./components/chibi";
 export default function Home() {
   return (
     <main className="relative min-h-screen w-full overflow-hidden bg-[#050d0a] text-neutral-100">
-      {/* Plain CSS: faint grid and soft radial green glow behind the character */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -24,21 +23,12 @@ export default function Home() {
         className="pointer-events-none absolute left-1/2 top-[38%] h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/8 blur-[90px]"
       />
 
-      {/* Top bar */}
       <header className="relative z-10 flex items-center justify-between px-6 py-5 sm:px-10">
-        <div className="text-sm font-semibold tracking-tight text-emerald-100">
-          YOUR NAME
-        </div>
+        <div className="text-sm font-semibold tracking-tight text-emerald-100">YOUR NAME</div>
         <nav className="flex items-center gap-4 text-sm text-emerald-100/80">
-          <a className="transition hover:text-emerald-200" href="#work">
-            Work
-          </a>
-          <a className="transition hover:text-emerald-200" href="#about">
-            About
-          </a>
-          <a className="transition hover:text-emerald-200" href="#contact">
-            Contact
-          </a>
+          <a className="transition hover:text-emerald-200" href="#work">Work</a>
+          <a className="transition hover:text-emerald-200" href="#about">About</a>
+          <a className="transition hover:text-emerald-200" href="#contact">Contact</a>
           <motion.button
             className="rounded-full border border-emerald-400/60 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-emerald-100 transition hover:bg-emerald-400/10"
             whileHover={{ scale: 1.03 }}
@@ -49,15 +39,12 @@ export default function Home() {
         </nav>
       </header>
 
-      {/* Hero content */}
       <section className="relative z-10 mx-auto flex min-h-[calc(100vh-88px)] max-w-6xl flex-col items-center justify-start px-4 pt-8 sm:pt-12">
         <HudFrame />
-
         <div className="relative mt-10 flex w-full items-center justify-center">
           <SkillBadges />
           <Chibi />
         </div>
-
         <DialogueBox />
       </section>
     </main>

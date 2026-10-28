@@ -10,11 +10,11 @@ export default function DialogueBox() {
   const [lineIndex, setLineIndex] = useState(0);
   const [text, setText] = useState("");
 
-  // Type out one letter at a time, then cycle through lines
   useEffect(() => {
     if (reduce) return;
     const line = LINES[lineIndex];
     let i = 0;
+    setText("");
     const id = window.setInterval(() => {
       i += 1;
       setText(line.slice(0, i));
@@ -28,8 +28,6 @@ export default function DialogueBox() {
     return () => window.clearInterval(id);
   }, [lineIndex, reduce]);
 
-  const displayed = reduce ? LINES[lineIndex] : text;
-
   return (
     <motion.div
       className="mt-6 w-full max-w-sm rounded-lg border border-emerald-400/40 bg-black/60 px-4 py-3 text-sm text-emerald-100 shadow-[0_0_40px_rgba(16,185,129,0.18)] backdrop-blur-sm"
@@ -39,7 +37,7 @@ export default function DialogueBox() {
     >
       <div className="flex items-center gap-2">
         <span className="text-emerald-300">&gt;</span>
-        <span>{displayed}</span>
+        <span>{reduce ? LINES[lineIndex] : text}</span>
         {!reduce && (
           <motion.span
             className="inline-block h-4 w-2 bg-emerald-300"
