@@ -1,10 +1,13 @@
+@import "tailwindcss";
+
 :root {
-  --background: #0a0e12;
-  --foreground: #d2ffeb;
+  --background: #fafaf7;
+  --foreground: #18181b;
 }
 
 html {
   height: 100%;
+  color-scheme: light;
 }
 
 html,
@@ -17,7 +20,6 @@ body {
   min-height: 100%;
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -31,8 +33,4 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-}
-
-html {
-  color-scheme: dark;
 }
