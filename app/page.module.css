@@ -3,21 +3,18 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4rem;
-  padding: 2rem;
+  overflow-x: hidden;
   background:
-    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(46, 229, 137, 0.08), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(46, 229, 137, 0.07), transparent 60%),
     #0a0e12;
-  overflow: hidden;
   font-family: var(--font-geist-mono), monospace;
 }
 
-/* ---- animated grid backdrop ---- */
+/* ---------- animated grid backdrop ---------- */
 .grid {
-  position: absolute;
+  position: fixed;
   inset: 0;
+  z-index: 0;
   background-image:
     linear-gradient(rgba(46, 229, 137, 0.07) 1px, transparent 1px),
     linear-gradient(90deg, rgba(46, 229, 137, 0.07) 1px, transparent 1px);
@@ -41,123 +38,37 @@
   }
 }
 
-/* ---- moving scanline ---- */
-.scanline {
-  position: absolute;
-  inset-inline: 0;
-  top: -20%;
-  height: 30%;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgba(46, 229, 137, 0.05) 45%,
-    rgba(46, 229, 137, 0.12) 50%,
-    rgba(46, 229, 137, 0.05) 55%,
-    transparent
-  );
-  animation: scan 7s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes scan {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(420%);
-  }
-}
-
-/* ---- subtle vignette ---- */
-.vignette {
-  position: absolute;
+/* ---------- flying terminal code canvas ---------- */
+.codeCanvas {
+  position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55));
+  z-index: 1;
   pointer-events: none;
 }
 
-/* ---- terminal window ---- */
-.terminal {
+/* ---------- image blocks ---------- */
+.imageBlock,
+.imageBlock2 {
   position: relative;
-  width: min(640px, 92vw);
-  border: 1px solid rgba(46, 229, 137, 0.35);
-  border-radius: 10px;
-  background: rgba(10, 14, 18, 0.85);
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.4),
-    0 24px 80px rgba(0, 0, 0, 0.6),
-    inset 0 0 40px rgba(46, 229, 137, 0.04);
-  overflow: hidden;
-  animation: terminalIn 0.6s ease-out both;
+  z-index: 2;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 620px;
+  margin: 0 auto;
 }
 
-@keyframes terminalIn {
+.imageBlock {
+  animation: blockIn 0.8s ease-out both;
+}
+
+.imageBlock2 {
+  animation: blockIn 0.8s ease-out 0.2s both;
+}
+
+@keyframes blockIn {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.titlebar {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0.7rem 1rem;
-  border-bottom: 1px solid rgba(46, 229, 137, 0.15);
-  background: rgba(46, 229, 137, 0.03);
-}
-
-.dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-}
-
-.dot[data-color="red"] {
-  background: #ff5f57;
-}
-
-.dot[data-color="yellow"] {
-  background: #febc2e;
-}
-
-.dot[data-color="green"] {
-  background: #28c840;
-}
-
-.title {
-  margin-left: auto;
-  margin-right: auto;
-  font-size: 0.72rem;
-  color: rgba(46, 229, 137, 0.5);
-  letter-spacing: 0.05em;
-}
-
-.body {
-  padding: 1.1rem 1.25rem 1.4rem;
-  font-size: 0.9rem;
-  line-height: 1.7;
-}
-
-.line,
-.lineActive {
-  color: rgba(210, 255, 235, 0.65);
-  animation: lineFade 0.4s ease-out both;
-}
-
-.lineActive {
-  color: #2ee589;
-}
-
-@keyframes lineFade {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -165,62 +76,38 @@
   }
 }
 
-.prompt {
-  color: #89e6a3;
+.imageBlock img,
+.imageBlock2 img {
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid rgba(46, 229, 137, 0.3);
+  border-radius: 8px;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.6),
+    inset 0 0 60px rgba(0, 0, 0, 0.35);
 }
 
-.cursorLine {
-  margin-top: 0.15rem;
+.image1Label,
+.image2Label {
+  position: absolute;
+  bottom: 0.8rem;
+  right: 1rem;
+  z-index: 3;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: rgba(46, 229, 137, 0.85);
+  text-shadow: 0 0 8px rgba(46, 229, 137, 0.6);
 }
 
-.cursor {
-  display: inline-block;
-  width: 0.6em;
-  height: 1.1em;
-  vertical-align: text-bottom;
-  background: #2ee589;
-  animation: blink 1.06s steps(1) infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
-/* ---- heading ---- */
-.heading {
-  position: relative;
-  font-size: clamp(1.4rem, 4vw, 2.2rem);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: #2ee589;
-  text-shadow:
-    0 0 12px rgba(46, 229, 137, 0.55),
-    0 0 40px rgba(46, 229, 137, 0.25);
-  animation: glowPulse 3s ease-in-out infinite;
-}
-
-.headingCursor {
-  display: inline-block;
-  width: 0.55em;
-  height: 1em;
-  margin-left: 0.2em;
-  vertical-align: -0.12em;
-  background: #2ee589;
-  animation: blink 1.06s steps(1) infinite;
-}
-
-@keyframes glowPulse {
-  0%,
-  100% {
-    text-shadow:
-      0 0 12px rgba(46, 229, 137, 0.55),
-      0 0 40px rgba(46, 229, 137, 0.25);
-  }
-  50% {
-    text-shadow:
-      0 0 20px rgba(46, 229, 137, 0.85),
-      0 0 60px rgba(46, 229, 137, 0.4);
-  }
+/* ---------- morphing blob (cursor reveal ring) ---------- */
+.blob {
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+  width: 520px;
+  height: 520px;
+  z-index: 4;
+  pointer-events: none;
+  overflow: visible;
+  transition: none;
 }
