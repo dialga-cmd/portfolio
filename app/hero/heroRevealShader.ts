@@ -33,8 +33,11 @@ uniform float uHover;         // 0..1 eased; 1 = pointer in hero, 0 = left (Liss
 uniform float uWaveAmp;       // idle wave amplitude (0 when prefers-reduced-motion)
 uniform vec2 uRevealScale;   // dev alignment control for Texture B (1,1 = default)
 uniform vec2 uRevealOffset;  // dev alignment offset for Texture B in uv units
+uniform vec3 uBgColor;       // background color sampled from image corners, matches --hero-bg
 
 varying vec2 vUv;
+
+#define BLOB_RADIUS 0.1485
 
 // ---- smooth value noise (2D), output 0..1 ----
 float hash21(vec2 p) {
@@ -96,9 +99,10 @@ void main() {
   // ---- 2. blob mask (unchanged: wobble radius + velocity growth + hover) ----
   vec2 mousePos = vec2(uMouse.x * cardAspect, uMouse.y);
   float d = distance(pos, mousePos);
-  float rBase = 0.18 * 0.55 + uMouseVelocity * 0.08;
-  float r = rBase + wobble(pos * 3.0 + vec2(t * 0.6, -t * 0.3)) * 0.05;
-  float edge = 1.0 - smoothstep(r - 0.03, r + 0.03, d);
+  // Blob radius scaled ~50% larger; wobble and velocity boost scaled proportionally
+  float rBase = BLOB_RADIUS + uMouseVelocity * 0.12;
+  float r = rBase + wobble(pos * 3.0 + vec2(t * 0.6, -t * 0.3)) * 0.075;
+  float edge = 1.0 - smoothstep(r - 0.04, r + 0.04, d);
   float mask = edge * uHover;
 
   // ---- 3. Texture B: its own cover-fit + alignment uniforms + liquid feel ----
@@ -109,11 +113,18 @@ void main() {
 
   float liquidStrength = uHover * (1.0 - smoothstep(r, r + 0.08, d));
   float nL = wobble(pos * 5.0 + vec2(t * 0.9, t * 0.5));
-  vec2 liquid = vec2(nL * 0.012 * liquidStrength * falloff, nL * 0.008 * liquidStrength * falloff);
+  vec2 liquid = vec2(nL * 0.018 * liquidStrength * falloff, nL * 0.012 * liquidStrength * falloff);
   uvBcover = clamp(uvBcover + liquid, 0.002, 0.998);
   vec4 colB = texture2D(uTextureB, uvBcover);
 
   // ---- 4. final color ----
-  gl_FragColor = vec4(mix(colA.rgb, colB.rgb, mask), 1.0);
+  vec3 mixed = mix(colA.rgb, colB.rgb, mask);
+
+  // Seamlessly fade the image edges into the background (both base and reveal).
+  float fade = smoothstep(0.0, 0.12, uv.x) * smoothstep(1.0, 0.88, uv.x)
+             * smoothstep(0.0, 0.12, uv.y) * smoothstep(1.0, 0.88, uv.y);
+  vec3 color = mix(uBgColor, mixed, fade);
+
+  gl_FragColor = vec4(color, 1.0);
 }
 `;

@@ -9,6 +9,17 @@ interface HeroRevealProps {
   revealSrc: string;
 }
 
+// Dark green-black sampled from the hero-base.png corners (matches the portrait edges)
+const HERO_BG = "#011611";
+
+function hexToVec3(hex: string): THREE.Vector3 {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16) / 255;
+  const g = parseInt(h.slice(2, 4), 16) / 255;
+  const b = parseInt(h.slice(4, 6), 16) / 255;
+  return new THREE.Vector3(r, g, b);
+}
+
 /**
  * Card-scoped Three.js canvas: base texture fills the card 1:1 (the card's
  * aspect-ratio equals the base image's natural aspect), and the reveal texture
@@ -37,8 +48,9 @@ export default function HeroReveal({ baseSrc, revealSrc }: HeroRevealProps) {
     const mount = mountRef.current;
     if (!mount) return;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
     const canvas = renderer.domElement;
     canvas.style.width = "100%";
     canvas.style.height = "100%";
@@ -101,9 +113,11 @@ export default function HeroReveal({ baseSrc, revealSrc }: HeroRevealProps) {
         uWaveAmp: { value: 0.005 },
         uRevealScale: { value: new THREE.Vector2(1, 1) },
         uRevealOffset: { value: new THREE.Vector2(0, 0) },
+        uBgColor: { value: hexToVec3(HERO_BG) },
       },
       vertexShader: heroRevealVertex,
       fragmentShader: heroRevealFragment,
+      transparent: true,
     });
 
     const refreshAspects = () => {

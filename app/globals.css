@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafaf7;
-  --foreground: #18181b;
+  --background: #011611;
+  --foreground: #e5e7eb;
+  --hero-bg: #011611;
 }
 
 html {
   height: 100%;
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 html,
@@ -19,7 +20,7 @@ body {
 body {
   min-height: 100%;
   color: var(--foreground);
-  background: var(--background);
+  background: var(--hero-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

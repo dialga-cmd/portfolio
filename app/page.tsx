@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 
-// The Three.js canvas touches WebGL at mount — load it client-side only.
 const HeroCanvas = dynamic(() => import("./hero/HeroReveal"), {
   ssr: false,
   loading: () => <div className="absolute inset-0" />,
@@ -10,19 +9,19 @@ const HeroCanvas = dynamic(() => import("./hero/HeroReveal"), {
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-[#0b0f0d] text-neutral-200">
-      {/* faint grid behind the card — plain CSS */}
+    <main className="relative min-h-screen w-full overflow-hidden bg-[var(--hero-bg)] text-neutral-200">
+      {/* faint grid behind the card — same color family */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(46,229,137,0.05) 1px, transparent 1px)," +
-            "linear-gradient(90deg, rgba(46,229,137,0.05) 1px, transparent 1px)",
+            "linear-gradient(rgba(46,229,137,0.04) 1px, transparent 1px)," +
+            "linear-gradient(90deg, rgba(46,229,137,0.04) 1px, transparent 1px)",
           backgroundSize: "44px 44px",
-          maskImage: "radial-gradient(ellipse 70% 60% at 50% 45%, black 30%, transparent 80%)",
+          maskImage: "radial-gradient(ellipse 70% 60% at 50% 45%, black 20%, transparent 80%)",
           WebkitMaskImage:
-            "radial-gradient(ellipse 70% 60% at 50% 45%, black 30%, transparent 80%)",
+            "radial-gradient(ellipse 70% 60% at 50% 45%, black 20%, transparent 80%)",
         }}
       />
 
