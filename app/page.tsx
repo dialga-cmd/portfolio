@@ -1,33 +1,65 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
-const HeroCanvas = dynamic(() => import("./hero/HeroReveal"), {
-  ssr: false,
-  loading: () => <div className="absolute inset-0" />,
-});
+import { motion } from "framer-motion";
+import { Chibi, DialogueBox, HudFrame, SkillBadges } from "./components/chibi";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen w-full overflow-hidden bg-[var(--hero-bg)] text-neutral-200">
-      {/* faint grid behind the card — same color family */}
+    <main className="relative min-h-screen w-full overflow-hidden bg-[#050d0a] text-neutral-100">
+      {/* Plain CSS: faint grid and soft radial green glow behind the character */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(46,229,137,0.04) 1px, transparent 1px)," +
-            "linear-gradient(90deg, rgba(46,229,137,0.04) 1px, transparent 1px)",
-          backgroundSize: "44px 44px",
-          maskImage: "radial-gradient(ellipse 70% 60% at 50% 45%, black 20%, transparent 80%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 70% 60% at 50% 45%, black 20%, transparent 80%)",
+            "linear-gradient(rgba(16,185,129,0.08) 1px, transparent 1px)," +
+            "linear-gradient(90deg, rgba(16,185,129,0.08) 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+          maskImage: "radial-gradient(ellipse 60% 50% at 50% 40%, black 30%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(ellipse 60% 50% at 50% 40%, black 30%, transparent 80%)",
         }}
       />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-[38%] h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/8 blur-[90px]"
+      />
 
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center p-6">
-        <HeroCanvas baseSrc="/hero-base.png" revealSrc="/hero-reveal.png" />
-      </div>
+      {/* Top bar */}
+      <header className="relative z-10 flex items-center justify-between px-6 py-5 sm:px-10">
+        <div className="text-sm font-semibold tracking-tight text-emerald-100">
+          YOUR NAME
+        </div>
+        <nav className="flex items-center gap-4 text-sm text-emerald-100/80">
+          <a className="transition hover:text-emerald-200" href="#work">
+            Work
+          </a>
+          <a className="transition hover:text-emerald-200" href="#about">
+            About
+          </a>
+          <a className="transition hover:text-emerald-200" href="#contact">
+            Contact
+          </a>
+          <motion.button
+            className="rounded-full border border-emerald-400/60 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-emerald-100 transition hover:bg-emerald-400/10"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Let&apos;s talk
+          </motion.button>
+        </nav>
+      </header>
+
+      {/* Hero content */}
+      <section className="relative z-10 mx-auto flex min-h-[calc(100vh-88px)] max-w-6xl flex-col items-center justify-start px-4 pt-8 sm:pt-12">
+        <HudFrame />
+
+        <div className="relative mt-10 flex w-full items-center justify-center">
+          <SkillBadges />
+          <Chibi />
+        </div>
+
+        <DialogueBox />
+      </section>
     </main>
   );
 }
