@@ -32,6 +32,15 @@ export const metadata: Metadata = {
     description:
       "Self-taught full-stack engineer, IIT Madras B.S. student, and open-source maintainer building across cryptography, developer tooling, AI systems, and web.",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-32.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({
