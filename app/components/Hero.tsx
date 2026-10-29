@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
@@ -31,6 +31,23 @@ export default function Hero() {
   const [lineIndex, setLineIndex] = useState(0);
   const [text, setText] = useState("");
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [chibiSize, setChibiSize] = useState({ width: 380, height: 500 });
+  const [angle, setAngle] = useState(0);
+
+  useEffect(() => {
+    if (reduce) return;
+    let frame: number;
+    let t = 0;
+    const speed = 0.15;
+    const loop = () => {
+      t += 0.016;
+      setAngle(t * speed);
+      frame = requestAnimationFrame(loop);
+    };
+    frame = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(frame);
+  }, [reduce]);
 
   useEffect(() => {
     if (reduce) return;
@@ -61,10 +78,25 @@ export default function Hero() {
     return () => window.removeEventListener("mousemove", onMove);
   }, [reduce]);
 
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      setChibiSize({ width: rect.width * 0.8, height: rect.height });
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   const tilt = useMemo(() => {
     if (!CURSOR_TILT || reduce) return "rotateX(0deg) rotateY(0deg)";
     return `rotateX(${-mouse.y * 6}deg) rotateY(${mouse.x * 6}deg)`;
   }, [mouse, reduce]);
+
+  const radiusX = chibiSize.width * 0.85 + 24;
+  const radiusY = chibiSize.height * 0.25;
 
   return (
     <section id="hero" className="relative min-h-screen pt-24">
@@ -122,60 +154,72 @@ export default function Hero() {
                 transition: "transform 200ms ease-out",
               }}
             >
-              <motion.div
-                className="relative flex h-[60vh] max-h-[560px] min-h-[320px] w-[80vw] max-w-[420px] items-end justify-center sm:w-[380px]"
-                animate={reduce ? {} : { scaleY: [1, 1.015, 1], y: [0, -6, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <Image
-                  src="/chibi/hero-wave.png"
-                  alt="Aditya chibi"
-                  fill
-                  sizes="(max-width: 640px) 60vw, 420px"
-                  style={{ objectFit: "contain" }}
-                  draggable={false}
-                  priority
-                />
-              </motion.div>
-              <div className="absolute -bottom-6 left-1/2 h-12 w-56 -translate-x-1/2 rounded-[50%] bg-emerald-400/12 blur-md sm:w-64" />
-              <div className="absolute -bottom-4 left-1/2 h-4 w-44 -translate-x-1/2 rounded-[50%] bg-emerald-400/25 sm:w-52" />
+              <div ref={containerRef} className="relative" style={{ position: "relative" }}>
+                <motion.div
+                  className="relative flex h-[60vh] max-h-[560px] min-h-[320px] w-[80vw] max-w-[420px] items-end justify-center sm:w-[380px]"
+                  animate={reduce ? {} : { scaleY: [1, 1.015, 1], y: [0, -6, 0] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                  style={{ position: "relative", zIndex: 20 }}
+                >
+                  <Image
+                    src="/chibi/hero-wave.png"
+                    alt="Aditya chibi"
+                    fill
+                    sizes="(max-width: 640px) 60vw, 420px"
+                    style={{ objectFit: "contain" }}
+                    draggable={false}
+                    priority
+                  />
+                </motion.div>
+                <div className="absolute -bottom-6 left-1/2 h-12 w-56 -translate-x-1/2 rounded-[50%] bg-emerald-400/12 blur-md sm:w-64" style={{ zIndex: 5 }} />
+                <div className="absolute -bottom-4 left-1/2 h-4 w-44 -translate-x-1/2 rounded-[50%] bg-emerald-400/25 sm:w-52" style={{ zIndex: 5 }} />
+                {!reduce && (
+                  <div
+                    className="absolute left-1/2"
+                    style={{
+                      position: "absolute",
+                      top: "55%",
+                      transform: "translate(-50%, -50%)",
+                      width: radiusX * 2,
+                      height: radiusY * 2,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    {BADGES.map((badge, i) => {
+                      const a = angle + i * (Math.PI * 2 / BADGES.length);
+                      const x = Math.cos(a) * radiusX;
+                      const y = Math.sin(a) * radiusY;
+                      const depth = Math.sin(a);
+                      const scale = 0.75 + 0.25 * (depth + 1) / 2;
+                      const opacity = 0.45 + 0.55 * (depth + 1) / 2;
+                      const zIndex = depth > 0 ? 30 : 10;
+                      const Icon = skillIconMap[badge.name];
+                      return (
+                        <div
+                          key={badge.name}
+                          style={{
+                            position: "absolute",
+                            left: "50%",
+                            top: "50%",
+                            transform: `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`,
+                            opacity,
+                            zIndex,
+                            pointerEvents: "auto",
+                          }}
+                        >
+                          <div
+                            className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-400/70 bg-[#0a1510]"
+                            style={{ boxShadow: "0 0 30px rgba(16,185,129,0.18)" }}
+                          >
+                            {Icon ? <Icon size={22} className="text-emerald-300" /> : <span className="font-mono text-[10px] text-emerald-200">{badge.name.slice(0, 2)}</span>}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
-
-            {!reduce && (
-              <motion.div
-                className="absolute h-[320px] w-[320px] sm:h-[380px] sm:w-[380px]"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-              >
-                {BADGES.map((badge, i) => {
-                  const angle = (i / BADGES.length) * Math.PI * 2;
-                  const radiusX = 190;
-                  const radiusY = 140;
-                  const x = Math.cos(angle) * radiusX;
-                  const y = Math.sin(angle) * radiusY;
-                  const behind = Math.sin(angle) < 0;
-                  const Icon = skillIconMap[badge.name];
-                  return (
-                    <div
-                      key={badge.name}
-                      className="absolute left-1/2 top-1/2"
-                      style={{
-                        opacity: behind ? 0.45 : 1,
-                        transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`,
-                        zIndex: behind ? 0 : 10,
-                      }}
-                    >
-                      <div
-                        className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-400/70 bg-[#0a1510] shadow-[0_0_30px_rgba(16,185,129,0.18)]"
-                        style={{ transform: "rotate(-360deg)" }}
-                      >
-                        {Icon ? <Icon size={22} className="text-emerald-300" /> : <span className="font-mono text-[10px] text-emerald-200">{badge.name.slice(0, 2)}</span>}
-                      </div>
-                    </div>
-                  );
-                })}
-              </motion.div>
-            )}
           </div>
         </motion.div>
       </div>

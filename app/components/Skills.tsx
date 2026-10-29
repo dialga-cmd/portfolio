@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { skillIconMap } from "@/data/icons";
 import { SUITE, SUITE_SKILLS } from "@/data/suite";
 import SectionHeading from "./SectionHeading";
-import { CORE_STACK, CORE_STACK_USAGE, SKILL_CATEGORIES } from "@/data/skills";
+import { CORE_STACK, CORE_STACK_USAGE } from "@/data/skills";
 import { PROJECTS } from "@/data/projects";
 import { IconType } from "react-icons";
 import { Lock, KeyRound, Fingerprint, Cpu, BadgeCheck, DatabaseZap, Network, Plug, ListOrdered, Braces } from "lucide-react";
@@ -59,27 +59,41 @@ const TAB_MAP: Record<string, string[]> = {
   openSource: ["package publishing", "code review", "release management", "semantic versioning", "contributor triage"],
 };
 
+const LANG_COLORS: Record<string, string> = {
+  Python: "bg-yellow-400",
+  "C++": "bg-blue-400",
+  C: "bg-blue-400",
+  TypeScript: "bg-cyan-400",
+  JavaScript: "bg-amber-400",
+};
+
 function normalizeSkill(s: string) {
-  const lower = s.toLowerCase();
+  const lower = s.toLowerCase().trim();
   if (lower === "gemini") return "Google Gemini";
-  if (lower === "firebase") return "Firebase";
-  if (lower === "tailwind") return "Tailwind CSS";
-  if (lower === "three") return "Three.js";
-  return s;
+  if (lower === "firebase" || lower === "firebase firestore") return "Firebase";
+  if (lower === "tailwind" || lower === "tailwind css") return "Tailwind CSS";
+  if (lower === "three" || lower === "three.js") return "Three.js";
+  return s.trim();
 }
 
 function getMatches(skill: string) {
   const norm = normalizeSkill(skill);
-  const results: Array<{ name: string; href?: string }> = [];
+  const results: Array<{ name: string; href?: string; lang?: string }> = [];
   for (const p of PROJECTS) {
     const used = (p.usedSkills || []).map(normalizeSkill);
     if (used.includes(norm)) {
-      results.push({ name: p.name, href: p.repoUrl });
+      results.push({ name: p.name, href: p.repoUrl, lang: p.language });
+    }
+  }
+  for (const s of SUITE) {
+    const used = (s.usedSkills || []).map(normalizeSkill);
+    if (used.includes(norm)) {
+      results.push({ name: s.name, href: s.repoUrl, lang: "Python" });
     }
   }
   if (SUITE_SKILLS.includes(norm)) {
     for (const s of SUITE) {
-      results.push({ name: s.name, href: s.repoUrl });
+      results.push({ name: s.name, href: s.repoUrl, lang: "Python" });
     }
   }
   const seen = new Set<string>();
@@ -112,6 +126,15 @@ export default function Skills() {
     const key = active as keyof typeof TAB_MAP;
     return TAB_MAP[key].filter((s) => ALLOWED_SKILLS.has(s));
   }, [active]);
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "development") return;
+    for (const skill of items) {
+      if (getMatches(skill).length === 0) {
+        console.error(`SKILLS: ${skill} has zero matches`);
+      }
+    }
+  }, [items]);
 
   return (
     <section id="skills" className="py-16 sm:py-24">
@@ -159,7 +182,7 @@ export default function Skills() {
         <motion.div layout className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((skill) => {
             const Icon = skillIconMap[skill] || FALLBACK_ICONS[skill];
-            const matches = getMatches(skill).slice(0, 4);
+            const matches = getMatches(skill);
             return (
               <motion.div
                 key={skill}
@@ -178,11 +201,12 @@ export default function Skills() {
                   {Icon ? <Icon size={20} className="text-emerald-300" /> : <div className="flex h-8 w-8 items-center justify-center rounded bg-emerald-400/20 font-mono text-xs">{skill.slice(0, 2)}</div>}
                   <p className="text-center text-xs text-emerald-100/80">{skill}</p>
                 </div>
-                {hovered === skill && (
-                  <div className="absolute left-1/2 top-full z-50 mt-2 w-56 -translate-x-1/2 rounded-lg border border-emerald-400/40 bg-black/95 p-3 text-xs text-emerald-100 shadow-[0_0_40px_rgba(16,185,129,0.2)]">
-                    <ul className="flex flex-col gap-1">
-                      {matches.map((m, idx) => (
-                        <li key={idx}>
+                {hovered === skill && matches.length > 0 && (
+                  <div className="absolute left-1/2 top-full z-[100] mt-2 w-56 -translate-x-1/2 rounded-lg border border-emerald-400/40 bg-[#050d0a] p-3 text-xs text-[var(--foreground)] shadow-[0_0_40px_rgba(16,185,129,0.2)]">
+                    <ul className="flex flex-col gap-1.5">
+                      {matches.slice(0, 4).map((m, idx) => (
+                        <li key={idx} className="flex items-center gap-2">
+                          {m.lang && <span className={`h-1.5 w-1.5 rounded-full ${LANG_COLORS[m.lang] || "bg-emerald-400"}`} />}
                           {m.href ? (
                             <a href={m.href} target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300">
                               {m.name}
@@ -192,7 +216,7 @@ export default function Skills() {
                           )}
                         </li>
                       ))}
-                      {getMatches(skill).length > 4 && <li className="text-emerald-100/50">+{getMatches(skill).length - 4} more</li>}
+                      {matches.length > 4 && <li className="text-emerald-100/50">+{matches.length - 4} more</li>}
                     </ul>
                   </div>
                 )}
