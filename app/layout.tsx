@@ -15,6 +15,7 @@ const monoFont = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://worldaditya.dev"),
   title: "Aditya Raj | Full-Stack Engineer & Open Source Maintainer",
   description:
     "Self-taught full-stack engineer, IIT Madras B.S. student, and open-source maintainer building across cryptography, developer tooling, AI systems, and web.",
@@ -25,12 +26,21 @@ export const metadata: Metadata = {
     url: "https://worldaditya.dev",
     siteName: "Aditya Raj",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Aditya Raj - Full-Stack Engineer & Open Source Maintainer",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Aditya Raj | Full-Stack Engineer & Open Source Maintainer",
     description:
       "Self-taught full-stack engineer, IIT Madras B.S. student, and open-source maintainer building across cryptography, developer tooling, AI systems, and web.",
+    images: ["/og-image.png"],
   },
   icons: {
     icon: [
