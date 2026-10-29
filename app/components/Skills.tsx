@@ -2,82 +2,94 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { SiPython, SiCplusplus, SiTypescript, SiReact, SiNextdotjs, SiFastapi, SiVite, SiTailwindcss, SiThreedotjs, SiD3, SiNodedotjs, SiExpress, SiFlask, SiDjango, SiPostgresql, SiSupabase, SiFirebase, SiMongodb, SiRedis, SiSqlite, SiGooglegemini, SiNvidia, SiHuggingface, SiLivekit, SiLinux, SiDocker, SiGit, SiVercel, SiRender } from "react-icons/si";
-import { Lock, Key, QrCode, Server, GitBranch } from "lucide-react";
+import { skillIconMap } from "@/data/icons";
+import { SUITE, SUITE_SKILLS } from "@/data/suite";
 import SectionHeading from "./SectionHeading";
 import { CORE_STACK, CORE_STACK_USAGE, SKILL_CATEGORIES } from "@/data/skills";
 import { PROJECTS } from "@/data/projects";
+import { IconType } from "react-icons";
+import { Lock, KeyRound, Fingerprint, Cpu, BadgeCheck, DatabaseZap, Network, Plug, ListOrdered, Braces } from "lucide-react";
 
-const ICON_MAP: Record<string, any> = {
-  Python: SiPython,
-  "C++": SiCplusplus,
-  C: SiCplusplus,
-  TypeScript: SiTypescript,
-  JavaScript: SiNodedotjs,
-  Kotlin: SiNodedotjs,
-  React: SiReact,
-  "Next.js": SiNextdotjs,
-  Vite: SiVite,
-  "Tailwind CSS": SiTailwindcss,
-  "Three.js": SiThreedotjs,
-  "D3.js": SiD3,
-  FastAPI: SiFastapi,
-  "Node.js": SiNodedotjs,
-  Express: SiExpress,
-  Flask: SiFlask,
-  Django: SiDjango,
-  PostgreSQL: SiPostgresql,
-  Supabase: SiSupabase,
-  "Firebase Firestore": SiFirebase,
-  MongoDB: SiMongodb,
-  Redis: SiRedis,
-  SQLite: SiSqlite,
-  ChromaDB: Server,
-  "Google Gemini": SiGooglegemini,
-  "NVIDIA NIM": SiNvidia,
-  Groq: SiNvidia,
-  "Hugging Face": SiHuggingface,
-  RAG: Server,
-  HMA: GitBranch,
-  LiveKit: SiLivekit,
+const FALLBACK_ICONS: Record<string, IconType> = {
   "AES-256-GCM": Lock,
-  Argon2id: Key,
-  "RSA-4096": Key,
-  PBKDF2: Key,
-  "TPM 2.0": Lock,
-  JWT: Key,
-  bcrypt: Key,
-  "signed QR tokens": QrCode,
-  Linux: SiLinux,
-  Docker: SiDocker,
-  WebSockets: Server,
-  "async job queues": Server,
-  "AST parsing": GitBranch,
-  Git: SiGit,
-  Vercel: SiVercel,
-  Render: SiRender,
-  Firebase: SiFirebase,
-  "package publishing": GitBranch,
-  "code review": GitBranch,
-  "release management": GitBranch,
-  "semantic versioning": GitBranch,
-  "contributor triage": GitBranch,
+  Argon2id: Fingerprint,
+  "RSA-4096": KeyRound,
+  "TPM 2.0": Cpu,
+  JWT: BadgeCheck,
+  RAG: DatabaseZap,
+  HMA: Network,
+  WebSockets: Plug,
+  "async job queues": ListOrdered,
+  "AST parsing": Braces,
+  "package publishing": Braces,
+  "code review": Braces,
+  "release management": Braces,
+  "semantic versioning": Braces,
+  "contributor triage": Braces,
 };
+
+const ALLOWED_SKILLS = new Set([
+  "Python", "C++", "TypeScript", "JavaScript",
+  "React", "Next.js", "Vite", "Tailwind CSS", "Three.js",
+  "FastAPI", "Node.js", "Express", "Flask", "Supabase", "Firebase Firestore", "Redis",
+  "Google Gemini", "NVIDIA NIM", "Hugging Face", "RAG", "HMA",
+  "AES-256-GCM", "Argon2id", "RSA-4096", "TPM 2.0", "JWT",
+  "Linux", "Docker", "WebSockets", "async job queues", "AST parsing", "Vercel", "Render", "Firebase",
+  "package publishing", "code review", "release management", "semantic versioning", "contributor triage",
+]);
 
 const TABS = [
   { key: "all", label: "All" },
   { key: "languages", label: "Languages" },
   { key: "frontend", label: "Frontend" },
-  { key: "backend", label: "Backend" },
-  { key: "databases", label: "Databases" },
+  { key: "backend", label: "Backend & Data" },
   { key: "aiMl", label: "AI / ML" },
   { key: "securityCrypto", label: "Security & Crypto" },
   { key: "systemsDevops", label: "Systems & DevOps" },
   { key: "openSource", label: "Open Source" },
 ] as const;
 
-function getProjectsForSkill(skill: string) {
-  return PROJECTS.filter((p) => (p.stack || []).some((s) => s.toLowerCase() === skill.toLowerCase())).map((p) => p.name);
+const TAB_MAP: Record<string, string[]> = {
+  languages: ["Python", "C++", "TypeScript", "JavaScript"],
+  frontend: ["React", "Next.js", "Vite", "Tailwind CSS", "Three.js"],
+  backend: ["FastAPI", "Node.js", "Express", "Flask", "Supabase", "Firebase Firestore", "Redis", "Firebase"],
+  aiMl: ["Google Gemini", "NVIDIA NIM", "Hugging Face", "RAG", "HMA"],
+  securityCrypto: ["AES-256-GCM", "Argon2id", "RSA-4096", "TPM 2.0", "JWT"],
+  systemsDevops: ["Linux", "Docker", "WebSockets", "async job queues", "AST parsing", "Vercel", "Render", "Firebase"],
+  openSource: ["package publishing", "code review", "release management", "semantic versioning", "contributor triage"],
+};
+
+function normalizeSkill(s: string) {
+  const lower = s.toLowerCase();
+  if (lower === "gemini") return "Google Gemini";
+  if (lower === "firebase") return "Firebase";
+  if (lower === "tailwind") return "Tailwind CSS";
+  if (lower === "three") return "Three.js";
+  return s;
+}
+
+function getMatches(skill: string) {
+  const norm = normalizeSkill(skill);
+  const results: Array<{ name: string; href?: string }> = [];
+  for (const p of PROJECTS) {
+    const used = (p.usedSkills || []).map(normalizeSkill);
+    if (used.includes(norm)) {
+      results.push({ name: p.name, href: p.repoUrl });
+    }
+  }
+  if (SUITE_SKILLS.includes(norm)) {
+    for (const s of SUITE) {
+      results.push({ name: s.name, href: s.repoUrl });
+    }
+  }
+  const seen = new Set<string>();
+  const unique = results.filter((r) => {
+    const key = r.name;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  return unique;
 }
 
 export default function Skills() {
@@ -87,19 +99,18 @@ export default function Skills() {
   const items = useMemo(() => {
     if (active === "all") {
       const all = [
-        ...SKILL_CATEGORIES.languages,
-        ...SKILL_CATEGORIES.frontend,
-        ...SKILL_CATEGORIES.backend,
-        ...SKILL_CATEGORIES.databases,
-        ...SKILL_CATEGORIES.aiMl,
-        ...SKILL_CATEGORIES.securityCrypto,
-        ...SKILL_CATEGORIES.systemsDevops,
-        ...SKILL_CATEGORIES.openSource,
+        "Python", "C++", "TypeScript", "JavaScript",
+        "React", "Next.js", "Vite", "Tailwind CSS", "Three.js",
+        "FastAPI", "Node.js", "Express", "Flask", "Supabase", "Firebase Firestore", "Redis",
+        "Google Gemini", "NVIDIA NIM", "Hugging Face", "RAG", "HMA",
+        "AES-256-GCM", "Argon2id", "RSA-4096", "TPM 2.0", "JWT",
+        "Linux", "Docker", "WebSockets", "async job queues", "AST parsing", "Vercel", "Render", "Firebase",
+        "package publishing", "code review", "release management", "semantic versioning", "contributor triage",
       ];
-      return Array.from(new Set(all));
+      return all.filter((s) => ALLOWED_SKILLS.has(s));
     }
-    const key = active as keyof typeof SKILL_CATEGORIES;
-    return SKILL_CATEGORIES[key];
+    const key = active as keyof typeof TAB_MAP;
+    return TAB_MAP[key].filter((s) => ALLOWED_SKILLS.has(s));
   }, [active]);
 
   return (
@@ -110,7 +121,7 @@ export default function Skills() {
           <p className="mb-4 text-sm uppercase tracking-[0.3em] text-emerald-400/70">Core stack</p>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {CORE_STACK.map((skill) => {
-              const Icon = ICON_MAP[skill];
+              const Icon = skillIconMap[skill] || FALLBACK_ICONS[skill];
               return (
                 <motion.div
                   key={skill}
@@ -120,7 +131,7 @@ export default function Skills() {
                   viewport={{ once: true, margin: "-60px" }}
                   transition={{ duration: 0.4 }}
                 >
-                  {Icon ? <Icon className="text-xl text-emerald-300" /> : <div className="flex h-6 w-6 items-center justify-center rounded bg-emerald-400/20 text-xs">{skill.slice(0, 2)}</div>}
+                  {Icon ? <Icon size={18} className="text-emerald-300" /> : <div className="flex h-6 w-6 items-center justify-center rounded bg-emerald-400/20 font-mono text-[10px]">{skill.slice(0, 2)}</div>}
                   <div>
                     <p className="text-sm font-medium text-emerald-100">{skill}</p>
                     <p className="text-xs text-emerald-100/60">{CORE_STACK_USAGE[skill]}</p>
@@ -135,7 +146,7 @@ export default function Skills() {
             <button
               key={tab.key}
               onClick={() => setActive(tab.key)}
-              className={`rounded-full border px-3 py-1 text-xs uppercase tracking-[0.2em] transition ${
+              className={`whitespace-nowrap rounded-full border px-3 py-1 text-xs uppercase tracking-[0.2em] transition ${
                 active === tab.key ? "border-emerald-400/70 bg-emerald-400/10 text-emerald-100" : "border-emerald-400/30 text-emerald-100/70 hover:text-emerald-100"
               }`}
               role="tab"
@@ -147,8 +158,8 @@ export default function Skills() {
         </div>
         <motion.div layout className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((skill) => {
-            const Icon = ICON_MAP[skill];
-            const projects = getProjectsForSkill(skill);
+            const Icon = skillIconMap[skill] || FALLBACK_ICONS[skill];
+            const matches = getMatches(skill).slice(0, 4);
             return (
               <motion.div
                 key={skill}
@@ -164,12 +175,25 @@ export default function Skills() {
                 tabIndex={0}
               >
                 <div className="flex h-full flex-col items-center justify-center gap-2 rounded-lg border border-emerald-400/30 bg-black/40 p-4 transition hover:border-emerald-400/60 hover:shadow-[0_0_30px_rgba(16,185,129,0.14)]">
-                  {Icon ? <Icon className="text-xl text-emerald-300" /> : <div className="flex h-8 w-8 items-center justify-center rounded bg-emerald-400/20 text-xs">{skill.slice(0, 2)}</div>}
+                  {Icon ? <Icon size={20} className="text-emerald-300" /> : <div className="flex h-8 w-8 items-center justify-center rounded bg-emerald-400/20 font-mono text-xs">{skill.slice(0, 2)}</div>}
                   <p className="text-center text-xs text-emerald-100/80">{skill}</p>
                 </div>
                 {hovered === skill && (
-                  <div className="absolute left-1/2 top-full z-20 mt-2 w-56 -translate-x-1/2 rounded-lg border border-emerald-400/40 bg-black/90 p-3 text-xs text-emerald-100 shadow-[0_0_40px_rgba(16,185,129,0.2)]">
-                    {projects.length === 0 ? <p className="text-emerald-100/60">Used by no listed project</p> : <ul className="flex flex-col gap-1">{projects.map((p) => <li key={p}>• {p}</li>)}</ul>}
+                  <div className="absolute left-1/2 top-full z-50 mt-2 w-56 -translate-x-1/2 rounded-lg border border-emerald-400/40 bg-black/95 p-3 text-xs text-emerald-100 shadow-[0_0_40px_rgba(16,185,129,0.2)]">
+                    <ul className="flex flex-col gap-1">
+                      {matches.map((m, idx) => (
+                        <li key={idx}>
+                          {m.href ? (
+                            <a href={m.href} target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300">
+                              {m.name}
+                            </a>
+                          ) : (
+                            <span>{m.name}</span>
+                          )}
+                        </li>
+                      ))}
+                      {getMatches(skill).length > 4 && <li className="text-emerald-100/50">+{getMatches(skill).length - 4} more</li>}
+                    </ul>
                   </div>
                 )}
               </motion.div>

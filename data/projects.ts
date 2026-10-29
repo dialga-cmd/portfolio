@@ -8,11 +8,14 @@ export interface Project {
   description: string;
   bullets?: string[];
   stack?: string[];
+  usedSkills?: string[];
   tag?: string;
   category: "featured" | "hackathon" | "web";
   featured?: boolean;
   showInHome?: boolean;
   specialNote?: string;
+  specialBadges?: string[];
+  specialMuted?: string;
 }
 
 export const PROJECTS: Project[] = [
@@ -22,8 +25,13 @@ export const PROJECTS: Project[] = [
     repo: "CodeLens",
     repoUrl: "https://github.com/dialga-cmd/CodeLens",
     language: "Python",
-    description: "AI Codebase Intelligence & 3D Visualization. Clones GitHub repos, parses source with Tree-sitter, extracts file and dependency relationships, detects architectural hotspots, and renders interactive 3D graphs, with an AI layer for contextual codebase queries.",
-    stack: ["Next.js", "React", "FastAPI", "Python", "Tree-sitter", "Three.js", "React Force Graph", "Firebase", "Gemini"],
+    description: "AI Codebase Intelligence & 3D Visualization that helps understand large repos through interactive graphs.",
+    bullets: [
+      "Clones repos, parses with Tree-sitter, maps files and dependencies",
+      "Detects hotspots and adds an AI layer for contextual queries",
+    ],
+    stack: ["Next.js", "React", "FastAPI", "Python", "Tree-sitter", "Three.js", "React Force Graph", "Firebase", "NVIDIA Nemotron"],
+    usedSkills: ["Python", "TypeScript", "React", "Next.js", "Tailwind CSS", "Three.js", "FastAPI", "Firebase", "AST parsing", "async job queues", "Docker", "NVIDIA NIM"],
     tag: "OpenAI x Outskill Hackathon 2026",
     category: "featured",
     featured: true,
@@ -35,8 +43,13 @@ export const PROJECTS: Project[] = [
     repo: "hma",
     repoUrl: "https://github.com/dialga-cmd/hma",
     language: "Python",
-    description: "HMA (Retrieval-Augmented Hierarchy). A structural alternative to chunk-based RAG that builds a knowledge map of files, imports, configs and docs, routes queries to relevant files, and needs no vector DB or embeddings. Offline indexing, LLM-based file routing, single-hop graph traversal, Python API/CLI.",
+    description: "HMA (Retrieval-Augmented Hierarchy) builds a knowledge map of files, imports, configs and docs with no vector DB or embeddings.",
+    bullets: [
+      "Routes queries to relevant files with LLM-based routing",
+      "Offline indexing, single-hop graph traversal, Python API/CLI",
+    ],
     stack: ["Python", "AST parsing", "LLM APIs", "PyMuPDF", "python-docx"],
+    usedSkills: ["Python", "AST parsing", "HMA"],
     category: "featured",
     featured: true,
     showInHome: true,
@@ -48,12 +61,18 @@ export const PROJECTS: Project[] = [
     repoUrl: "https://github.com/dialga-cmd/LucidGrasp",
     language: "C++",
     stars: 3,
-    description: "Open-source image reverse-search engine built in C++ with OpenCV and Qt6. Indexes local libraries of any size and finds visually similar images, including edited, color-graded, cropped and rotated variants. Combines SSIM (45%), ORB keypoints (35%) and HSV histogram matching (20%) in a two-stage pipeline (fast hash shortlist, then full OpenCV comparison) with background-threaded indexing and search. Runs fully locally with no upload, account or telemetry.",
+    description: "Open-source image reverse-search engine built in C++ with OpenCV and Qt6 that indexes local libraries and finds similar images.",
+    bullets: [
+      "SSIM + ORB + HSV histogram, two-stage ranking",
+      "Runs fully locally: no upload, account or telemetry",
+    ],
     stack: ["C++", "OpenCV", "Qt6", "CMake"],
+    usedSkills: ["C++", "Linux"],
     category: "featured",
     featured: true,
     showInHome: true,
-    specialNote: "Available for Linux, Windows and macOS. Published on Snap Store, Launchpad PPA, openSUSE OBS and Scoop. Submitted to Flathub, WinGet and Nixpkgs.",
+    specialBadges: ["Linux", "Windows", "macOS", "Snap Store", "Launchpad PPA", "openSUSE OBS", "Scoop"],
+    specialMuted: "Submitted: Flathub, WinGet, Nixpkgs",
   },
   {
     id: "utsav-ai",
@@ -61,9 +80,10 @@ export const PROJECTS: Project[] = [
     repo: "utsav-ai",
     repoUrl: "https://github.com/dialga-cmd/utsav-ai",
     language: "TypeScript",
-    description: "GenAI-powered event-planning assistant for Indian families. Describe a wedding, birthday or community celebration in plain language and get an editable plan: an exact rupee budget, back-planned timeline, vendor checklist and personalised ideas. A deterministic engine keeps it working even when the AI is offline.",
+    description: "GenAI-powered event-planning assistant for Indian families. Describe a wedding, birthday or community celebration in plain language and get an editable plan.",
     tag: "Google PromptWar, Round 5",
     stack: ["Next.js", "React", "TypeScript", "Google Gemini"],
+    usedSkills: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Google Gemini", "Vercel"],
     category: "hackathon",
     showInHome: true,
   },
@@ -73,8 +93,10 @@ export const PROJECTS: Project[] = [
     repo: "google-fifa-26",
     repoUrl: "https://github.com/dialga-cmd/google-fifa-26",
     language: "Python",
-    description: "AI-powered stadium navigation assistant for the FIFA World Cup 2026. Helps fans find facilities and routes, with accessibility-aware guidance and voice or text input.",
+    description: "AI-powered stadium navigation assistant for the FIFA World Cup 2026 with accessibility-aware guidance and voice or text input.",
     tag: "Google PromptWar, ranked 310 / 46,000+",
+    stack: ["Python", "FastAPI", "Redis", "WebSockets"],
+    usedSkills: ["Python", "FastAPI", "Redis", "WebSockets", "JWT", "Google Gemini", "Docker", "Render"],
     category: "hackathon",
     showInHome: true,
   },
@@ -84,9 +106,10 @@ export const PROJECTS: Project[] = [
     repo: "disaster-intelligence-copilot",
     repoUrl: "https://github.com/dialga-cmd/disaster-intelligence-copilot",
     language: "JavaScript",
-    description: "AI public-safety decision platform with a live hazard map (NASA EONET and USGS), AI triage of citizen reports, RAG-grounded safety Q&A and a responder dashboard.",
+    description: "AI public-safety decision platform with a live hazard map, AI triage of citizen reports, RAG-grounded safety Q&A and a responder dashboard.",
     tag: "Google Gen AI Hackathon",
     stack: ["React", "Vite", "Tailwind CSS", "Google Gemini"],
+    usedSkills: ["JavaScript", "React", "Vite", "Tailwind CSS", "Node.js", "Express", "Firebase", "Google Gemini", "RAG", "Vercel"],
     category: "hackathon",
     showInHome: true,
   },
@@ -107,8 +130,9 @@ export const PROJECTS: Project[] = [
     repo: "fineprint",
     repoUrl: "https://github.com/dialga-cmd/fineprint",
     language: "JavaScript",
-    description: "AI-powered legal assistance app. Upload or paste a contract and get plain-English help, from risk scanning to clause-by-clause checklists. Built for a legal-access hackathon.",
+    description: "AI-powered legal assistance app. Upload or paste a contract and get plain-English help, from risk scanning to clause-by-clause checklists.",
     stack: ["Firebase", "Google Gemini"],
+    usedSkills: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Firebase", "Google Gemini", "Docker", "Render"],
     category: "hackathon",
     showInHome: true,
   },
@@ -120,6 +144,7 @@ export const PROJECTS: Project[] = [
     language: "TypeScript",
     description: "Sign in, journal or brainstorm with Gemini in a multi-turn chat, and every conversation is summarized and saved, with strict per-user data isolation.",
     stack: ["Firebase", "Google Gemini"],
+    usedSkills: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Firebase", "Google Gemini", "JWT"],
     category: "hackathon",
     showInHome: true,
   },
@@ -130,6 +155,7 @@ export const PROJECTS: Project[] = [
     repoUrl: "https://github.com/dialga-cmd/industrial-product-intelligence",
     language: "Python",
     description: "AI pipeline that turns fragmented industrial product information into accurate, structured, commerce-ready product data.",
+    usedSkills: ["Python", "Render"],
     category: "hackathon",
     showInHome: true,
   },
@@ -140,6 +166,7 @@ export const PROJECTS: Project[] = [
     repoUrl: "https://github.com/dialga-cmd/ZINCxNH",
     language: "TypeScript",
     description: "A small code analysis platform where users submit a code snippet and ask queries about it or ask coding questions.",
+    usedSkills: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Three.js", "Firebase", "Google Gemini", "Hugging Face"],
     category: "hackathon",
     showInHome: true,
   },
@@ -151,6 +178,7 @@ export const PROJECTS: Project[] = [
     language: "TypeScript",
     description: "Web app showcasing core team members, events and an interactive playground.",
     stack: ["Next.js", "Supabase", "Three.js"],
+    usedSkills: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Three.js", "Supabase"],
     category: "web",
     showInHome: true,
   },
@@ -162,6 +190,7 @@ export const PROJECTS: Project[] = [
     language: "TypeScript",
     description: "Retro-pixel Capture-The-Flag platform for Linux forensics and incident response, with an in-browser virtualized Linux terminal and 3 escalating rounds.",
     stack: ["Next.js", "TypeScript", "Supabase"],
+    usedSkills: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Supabase", "Redis", "Docker", "Render", "Vercel"],
     category: "web",
     showInHome: true,
   },
@@ -172,6 +201,7 @@ export const PROJECTS: Project[] = [
     repoUrl: "https://github.com/dialga-cmd/MediaPull",
     language: "HTML",
     description: "Universal media extraction platform supporting YouTube, Instagram, TikTok, Twitter/X and Facebook.",
+    usedSkills: ["Python", "Flask", "Redis", "WebSockets"],
     category: "web",
     showInHome: true,
   },

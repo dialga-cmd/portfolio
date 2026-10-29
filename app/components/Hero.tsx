@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { Chibi } from "./chibi";
+import { skillIconMap } from "@/data/icons";
 
 const CURSOR_TILT = false;
 
@@ -16,12 +16,12 @@ const STATS = [
 ];
 
 const BADGES = [
-  { name: "Python", icon: "/icons/python.svg" },
-  { name: "C++", icon: "/icons/cpp.svg" },
-  { name: "TypeScript", icon: "/icons/typescript.svg" },
-  { name: "React", icon: "/icons/react.svg" },
-  { name: "Next.js", icon: "/icons/nextjs.svg" },
-  { name: "Three.js", icon: "/icons/threejs.svg" },
+  { name: "Python" },
+  { name: "C++" },
+  { name: "TypeScript" },
+  { name: "React" },
+  { name: "Next.js" },
+  { name: "Three.js" },
 ];
 
 const LINES = ["Hi, I'm Aditya", "I build secure software", "Scroll down to see my work"];
@@ -142,40 +142,39 @@ export default function Hero() {
             </div>
 
             {!reduce && (
-              <div className="absolute h-[320px] w-[320px] sm:h-[380px] sm:w-[380px]">
+              <motion.div
+                className="absolute h-[320px] w-[320px] sm:h-[380px] sm:w-[380px]"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+              >
                 {BADGES.map((badge, i) => {
                   const angle = (i / BADGES.length) * Math.PI * 2;
-                  const radiusX = 150;
-                  const radiusY = 110;
+                  const radiusX = 190;
+                  const radiusY = 140;
                   const x = Math.cos(angle) * radiusX;
                   const y = Math.sin(angle) * radiusY;
                   const behind = Math.sin(angle) < 0;
+                  const Icon = skillIconMap[badge.name];
                   return (
-                    <motion.div
+                    <div
                       key={badge.name}
-                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                      className="absolute left-1/2 top-1/2"
                       style={{
-                        opacity: behind ? 0.4 : 0.9,
-                        scale: behind ? 0.85 : 1,
+                        opacity: behind ? 0.45 : 1,
+                        transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`,
+                        zIndex: behind ? 0 : 10,
                       }}
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
                     >
                       <div
-                        className="group relative flex h-10 w-10 items-center justify-center rounded-full border border-emerald-400/40 bg-black/60 backdrop-blur-sm"
-                        style={{
-                          transform: `translate(${x}px, ${y}px) rotate(-360deg)`,
-                        }}
+                        className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-400/70 bg-[#0a1510] shadow-[0_0_30px_rgba(16,185,129,0.18)]"
+                        style={{ transform: "rotate(-360deg)" }}
                       >
-                        <Image src={badge.icon} alt={badge.name} width={20} height={20} />
-                        <div className="pointer-events-none absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-2 py-1 text-[10px] text-emerald-200 opacity-0 transition group-hover:opacity-100">
-                          {badge.name}
-                        </div>
+                        {Icon ? <Icon size={22} className="text-emerald-300" /> : <span className="font-mono text-[10px] text-emerald-200">{badge.name.slice(0, 2)}</span>}
                       </div>
-                    </motion.div>
+                    </div>
                   );
                 })}
-              </div>
+              </motion.div>
             )}
           </div>
         </motion.div>
