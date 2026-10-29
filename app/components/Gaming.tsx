@@ -40,15 +40,18 @@ const TIER_COLORS: Record<string, string> = {
 export default function Gaming() {
   const [data, setData] = useState<GamingData | null>(null);
   const [visible, setVisible] = useState(false);
+  const [errors, setErrors] = useState<any[]>([]);
+  const [diagnose, setDiagnose] = useState(false);
 
   useEffect(() => {
     if (FEATURED_APPIDS.length === 0 && !STEAM_PROFILE_URL && otherAchievements.length === 0) {
       setVisible(false);
       return;
     }
-    fetch("/api/steam")
+    fetch("/api/steam", { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
+        setErrors(json.errors || []);
         if (json.ok && json.data) {
           const d = json.data as GamingData;
           if (d.player || (d.featured && d.featured.length)) {
@@ -59,14 +62,44 @@ export default function Gaming() {
         }
         if (otherAchievements.length > 0 || STEAM_PROFILE_URL) {
           setVisible(true);
+          return;
+        }
+        if (process.env.NODE_ENV !== "production") {
+          setDiagnose(true);
+          setVisible(true);
         }
       })
-      .catch(() => {
-        if (otherAchievements.length > 0) setVisible(true);
+      .catch((e) => {
+        setErrors([{ endpoint: "fetch", status: 0, message: e.message }]);
+        if (process.env.NODE_ENV !== "production") {
+          setDiagnose(true);
+          setVisible(true);
+        }
       });
   }, []);
 
   if (!visible) return null;
+
+  if (diagnose && process.env.NODE_ENV !== "production") {
+    return (
+      <section id="gaming" className="py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-6 sm:px-8">
+          <SectionHeading number="// 06" title="PLAYER PROFILE" />
+          <div className="rounded-lg border-2 border-dashed border-amber-400/60 bg-black/40 p-6">
+            <p className="text-lg font-semibold text-amber-300">GAMING SECTION HIDDEN</p>
+            <ul className="mt-3 flex flex-col gap-2 text-sm text-amber-100/80">
+              {!process.env.NEXT_PUBLIC_STEAM_CHECK && !process.env.STEAM_API_KEY && <li>• env vars missing</li>}
+              {errors.map((e, i) => (
+                <li key={i}>
+                  • {e.endpoint}: status {e.status} — {e.message}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const profileUrl = (data && data.player && data.player.profileUrl) || STEAM_PROFILE_URL;
   const featured = (data && data.featured) ? data.featured : [];
@@ -81,7 +114,7 @@ export default function Gaming() {
   return (
     <section id="gaming" className="py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-6 sm:px-8">
-        <SectionHeading number="// 07" title="PLAYER PROFILE" />
+        <SectionHeading number="// 06" title="PLAYER PROFILE" />
         <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           <motion.div
             className="flex flex-col gap-4"

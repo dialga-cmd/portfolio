@@ -26,20 +26,27 @@ export default function Navbar() {
       setShowGaming(false);
       return;
     }
-    fetch("/api/steam")
+    fetch("/api/steam", { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
         if (json.ok && json.data) {
           const d = json.data;
-          if (d.player || (d.featured && d.featured.length) || otherAchievements.length > 0) {
+          if (d.player || (d.featured && d.featured.length)) {
             setShowGaming(true);
+            return;
           }
-        } else if (otherAchievements.length > 0) {
+        }
+        if (otherAchievements.length > 0 || STEAM_PROFILE_URL) {
+          setShowGaming(true);
+          return;
+        }
+        if (process.env.NODE_ENV !== "production") {
           setShowGaming(true);
         }
       })
       .catch(() => {
-        if (otherAchievements.length > 0) setShowGaming(true);
+        if (otherAchievements.length > 0 || STEAM_PROFILE_URL) setShowGaming(true);
+        else if (process.env.NODE_ENV !== "production") setShowGaming(true);
       });
   }, []);
 

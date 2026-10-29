@@ -17,7 +17,7 @@ export default function Contact() {
   return (
     <section id="contact" className="py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-6 sm:px-8">
-        <SectionHeading number="// 06" title="CONTACT" />
+        <SectionHeading number="// 07" title="CONTACT" />
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-emerald-100 sm:text-3xl">Let&apos;s build something.</h3>
         </div>

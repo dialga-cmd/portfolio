@@ -34,9 +34,14 @@ export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [chibiSize, setChibiSize] = useState({ width: 380, height: 500 });
   const [angle, setAngle] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (reduce) return;
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (reduce || !mounted) return;
     let frame: number;
     let t = 0;
     const speed = 0.15;
@@ -47,7 +52,7 @@ export default function Hero() {
     };
     frame = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(frame);
-  }, [reduce]);
+  }, [reduce, mounted]);
 
   useEffect(() => {
     if (reduce) return;
@@ -173,7 +178,7 @@ export default function Hero() {
                 </motion.div>
                 <div className="absolute -bottom-6 left-1/2 h-12 w-56 -translate-x-1/2 rounded-[50%] bg-emerald-400/12 blur-md sm:w-64" style={{ zIndex: 5 }} />
                 <div className="absolute -bottom-4 left-1/2 h-4 w-44 -translate-x-1/2 rounded-[50%] bg-emerald-400/25 sm:w-52" style={{ zIndex: 5 }} />
-                {!reduce && (
+                {mounted && !reduce && (
                   <div
                     className="absolute left-1/2"
                     style={{
