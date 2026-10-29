@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const LINES = ["Hi, I'm YOUR NAME", "I build things for the web", "Scroll down to see my work"];
+const LINES = ["Hi, I'm ADITYA RAJ", "I build things for the web", "Scroll down to see my work"];
 
 export default function DialogueBox() {
   const reduce = useReducedMotion();

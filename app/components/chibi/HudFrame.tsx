@@ -28,7 +28,7 @@ export default function HudFrame() {
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-xs uppercase tracking-[0.25em] text-emerald-200/90">
-            YOUR NAME // Full-stack Developer
+            ADITYA RAJ // Full-stack Developer
           </div>
           <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-emerald-300/70">
             <span>LVL 01</span>
