@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FEATURED_APPIDS, STEAM_PROFILE_URL, otherAchievements } from "@/data/steam";
 
 const NAV_LINKS = [
   { href: "#about", label: "About" },
@@ -22,31 +21,17 @@ export default function Navbar() {
   const [showGaming, setShowGaming] = useState(false);
 
   useEffect(() => {
-    if (FEATURED_APPIDS.length === 0 && !STEAM_PROFILE_URL && otherAchievements.length === 0) {
-      setShowGaming(false);
-      return;
-    }
     fetch("/api/steam", { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
-        if (json.ok && json.data) {
-          const d = json.data;
-          if (d.player || (d.featured && d.featured.length)) {
-            setShowGaming(true);
-            return;
-          }
-        }
-        if (otherAchievements.length > 0 || STEAM_PROFILE_URL) {
+        if (json.ok && json.data && json.data.player) {
           setShowGaming(true);
-          return;
-        }
-        if (process.env.NODE_ENV !== "production") {
+        } else if (process.env.NODE_ENV !== "production") {
           setShowGaming(true);
         }
       })
       .catch(() => {
-        if (otherAchievements.length > 0 || STEAM_PROFILE_URL) setShowGaming(true);
-        else if (process.env.NODE_ENV !== "production") setShowGaming(true);
+        if (process.env.NODE_ENV !== "production") setShowGaming(true);
       });
   }, []);
 

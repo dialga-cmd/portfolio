@@ -10,6 +10,7 @@ const POSE_MAP: Record<string, string> = {
   opensource: "/chibi/thinking.png",
   projects: "/chibi/projects-presenting.png",
   achievements: "/chibi/success-celebrate.png",
+  gaming: "/chibi/gaming-controller.png",
   contact: "/chibi/contact-phone.png",
   error: "/chibi/error-shrug.png",
 };
