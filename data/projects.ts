@@ -1,51 +1,178 @@
 export interface Project {
-  title: string;
-  summary: string;
-  bullets: string[];
-  stack: string[];
-  github?: string;
+  id: string;
+  name: string;
+  repo: string;
+  repoUrl: string;
+  language: string;
+  stars?: number;
+  description: string;
+  bullets?: string[];
+  stack?: string[];
+  tag?: string;
+  category: "featured" | "hackathon" | "web";
   featured?: boolean;
-  isSuite?: boolean;
+  showInHome?: boolean;
+  specialNote?: string;
 }
 
 export const PROJECTS: Project[] = [
   {
-    title: "CodeLens",
-    summary:
-      "AI Codebase Intelligence & 3D Visualization. Clones GitHub repos, parses source with Tree-sitter, and renders interactive 3D graphs.",
-    bullets: [
-      "Extracts file and dependency relationships, detects architectural hotspots",
-      "AI layer for contextual codebase queries with interactive 3D visualization",
-    ],
+    id: "codelens",
+    name: "CodeLens",
+    repo: "CodeLens",
+    repoUrl: "https://github.com/dialga-cmd/CodeLens",
+    language: "Python",
+    description: "AI Codebase Intelligence & 3D Visualization. Clones GitHub repos, parses source with Tree-sitter, extracts file and dependency relationships, detects architectural hotspots, and renders interactive 3D graphs, with an AI layer for contextual codebase queries.",
     stack: ["Next.js", "React", "FastAPI", "Python", "Tree-sitter", "Three.js", "React Force Graph", "Firebase", "Gemini"],
-    github: "https://github.com/dialga-cmd/CodeLens",
+    tag: "OpenAI x Outskill Hackathon 2026",
+    category: "featured",
     featured: true,
+    showInHome: true,
   },
   {
-    title: "HMA",
-    summary: "Retrieval-Augmented Hierarchy. A structural alternative to chunk-based RAG that builds a knowledge map of files, imports, configs and docs.",
-    bullets: [
-      "Routes queries to relevant files, no vector DB or embeddings required",
-      "Offline indexing, LLM-based file routing, single-hop graph traversal, Python API/CLI",
-    ],
+    id: "hma",
+    name: "HMA",
+    repo: "hma",
+    repoUrl: "https://github.com/dialga-cmd/hma",
+    language: "Python",
+    description: "HMA (Retrieval-Augmented Hierarchy). A structural alternative to chunk-based RAG that builds a knowledge map of files, imports, configs and docs, routes queries to relevant files, and needs no vector DB or embeddings. Offline indexing, LLM-based file routing, single-hop graph traversal, Python API/CLI.",
     stack: ["Python", "AST parsing", "LLM APIs", "PyMuPDF", "python-docx"],
-    github: "https://github.com/dialga-cmd/hma",
+    category: "featured",
+    featured: true,
+    showInHome: true,
   },
   {
-    title: "LucidGrasp",
-    summary: "C++ Image Search & Computer Vision. Cross-platform image search for visually similar images including edited variants.",
-    bullets: [
-      "Weighted SSIM + ORB keypoints + HSV histogram matching with two-stage ranking",
-      "Background threading for fast, responsive search",
-    ],
+    id: "lucidgrasp",
+    name: "LucidGrasp",
+    repo: "LucidGrasp",
+    repoUrl: "https://github.com/dialga-cmd/LucidGrasp",
+    language: "C++",
+    stars: 3,
+    description: "Open-source image reverse-search engine built in C++ with OpenCV and Qt6. Indexes local libraries of any size and finds visually similar images, including edited, color-graded, cropped and rotated variants. Combines SSIM (45%), ORB keypoints (35%) and HSV histogram matching (20%) in a two-stage pipeline (fast hash shortlist, then full OpenCV comparison) with background-threaded indexing and search. Runs fully locally with no upload, account or telemetry.",
     stack: ["C++", "OpenCV", "Qt6", "CMake"],
-    github: "https://github.com/dialga-cmd/LucidGrasp",
+    category: "featured",
+    featured: true,
+    showInHome: true,
+    specialNote: "Available for Linux, Windows and macOS. Published on Snap Store, Launchpad PPA, openSUSE OBS and Scoop. Submitted to Flathub, WinGet and Nixpkgs.",
   },
   {
-    title: "GUN101 / GUN101-GKP / GUN101-TPM",
-    summary: "Cryptographic suite of secure file encryption protocols (see suite above).",
-    bullets: ["Password-based and passwordless encryption flows", "Hardware-bound encryption via TPM 2.0"],
-    stack: ["Python", "AES-256-GCM", "Argon2id", "RSA-4096", "TPM 2.0"],
-    isSuite: true,
+    id: "utsav-ai",
+    name: "Utsav AI",
+    repo: "utsav-ai",
+    repoUrl: "https://github.com/dialga-cmd/utsav-ai",
+    language: "TypeScript",
+    description: "GenAI-powered event-planning assistant for Indian families. Describe a wedding, birthday or community celebration in plain language and get an editable plan: an exact rupee budget, back-planned timeline, vendor checklist and personalised ideas. A deterministic engine keeps it working even when the AI is offline.",
+    tag: "Google PromptWar, Round 5",
+    stack: ["Next.js", "React", "TypeScript", "Google Gemini"],
+    category: "hackathon",
+    showInHome: true,
+  },
+  {
+    id: "fanwayfinder",
+    name: "FanWayfinder",
+    repo: "google-fifa-26",
+    repoUrl: "https://github.com/dialga-cmd/google-fifa-26",
+    language: "Python",
+    description: "AI-powered stadium navigation assistant for the FIFA World Cup 2026. Helps fans find facilities and routes, with accessibility-aware guidance and voice or text input.",
+    tag: "Google PromptWar, ranked 310 / 46,000+",
+    category: "hackathon",
+    showInHome: true,
+  },
+  {
+    id: "disaster-copilot",
+    name: "Disaster Intelligence Copilot",
+    repo: "disaster-intelligence-copilot",
+    repoUrl: "https://github.com/dialga-cmd/disaster-intelligence-copilot",
+    language: "JavaScript",
+    description: "AI public-safety decision platform with a live hazard map (NASA EONET and USGS), AI triage of citizen reports, RAG-grounded safety Q&A and a responder dashboard.",
+    tag: "Google Gen AI Hackathon",
+    stack: ["React", "Vite", "Tailwind CSS", "Google Gemini"],
+    category: "hackathon",
+    showInHome: true,
+  },
+  {
+    id: "civicpulse",
+    name: "CivicPulse",
+    repo: "CivicPulse",
+    repoUrl: "https://github.com/dialga-cmd/CivicPulse",
+    language: "TypeScript",
+    description: "Built for AI for Digital Public Infrastructure and Governance.",
+    tag: "BRICS Track",
+    category: "hackathon",
+    showInHome: true,
+  },
+  {
+    id: "fineprint",
+    name: "FinePrint",
+    repo: "fineprint",
+    repoUrl: "https://github.com/dialga-cmd/fineprint",
+    language: "JavaScript",
+    description: "AI-powered legal assistance app. Upload or paste a contract and get plain-English help, from risk scanning to clause-by-clause checklists. Built for a legal-access hackathon.",
+    stack: ["Firebase", "Google Gemini"],
+    category: "hackathon",
+    showInHome: true,
+  },
+  {
+    id: "gemini-journal",
+    name: "Gemini Journal",
+    repo: "gemini-journal",
+    repoUrl: "https://github.com/dialga-cmd/gemini-journal",
+    language: "TypeScript",
+    description: "Sign in, journal or brainstorm with Gemini in a multi-turn chat, and every conversation is summarized and saved, with strict per-user data isolation.",
+    stack: ["Firebase", "Google Gemini"],
+    category: "hackathon",
+    showInHome: true,
+  },
+  {
+    id: "industrial-product-intelligence",
+    name: "Industrial Product Intelligence",
+    repo: "industrial-product-intelligence",
+    repoUrl: "https://github.com/dialga-cmd/industrial-product-intelligence",
+    language: "Python",
+    description: "AI pipeline that turns fragmented industrial product information into accurate, structured, commerce-ready product data.",
+    category: "hackathon",
+    showInHome: true,
+  },
+  {
+    id: "zincxnh",
+    name: "ZINCxNH",
+    repo: "ZINCxNH",
+    repoUrl: "https://github.com/dialga-cmd/ZINCxNH",
+    language: "TypeScript",
+    description: "A small code analysis platform where users submit a code snippet and ask queries about it or ask coding questions.",
+    category: "hackathon",
+    showInHome: true,
+  },
+  {
+    id: "jarvis-society",
+    name: "Jarvis Society",
+    repo: "jarvis-society",
+    repoUrl: "https://github.com/dialga-cmd/jarvis-society",
+    language: "TypeScript",
+    description: "Web app showcasing core team members, events and an interactive playground.",
+    stack: ["Next.js", "Supabase", "Three.js"],
+    category: "web",
+    showInHome: true,
+  },
+  {
+    id: "operation-blackout",
+    name: "Operation Blackout",
+    repo: "operation-blackout",
+    repoUrl: "https://github.com/dialga-cmd/operation-blackout",
+    language: "TypeScript",
+    description: "Retro-pixel Capture-The-Flag platform for Linux forensics and incident response, with an in-browser virtualized Linux terminal and 3 escalating rounds.",
+    stack: ["Next.js", "TypeScript", "Supabase"],
+    category: "web",
+    showInHome: true,
+  },
+  {
+    id: "mediapull",
+    name: "MediaPull",
+    repo: "MediaPull",
+    repoUrl: "https://github.com/dialga-cmd/MediaPull",
+    language: "HTML",
+    description: "Universal media extraction platform supporting YouTube, Instagram, TikTok, Twitter/X and Facebook.",
+    category: "web",
+    showInHome: true,
   },
 ];

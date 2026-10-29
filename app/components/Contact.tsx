@@ -3,12 +3,13 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import SectionHeading from "./SectionHeading";
-import SectionPose from "./SectionPose";
+import { EMAIL, GITHUB, LINKEDIN, WEBSITE } from "@/data/site";
 
 const CARDS = [
-  { label: "Email", value: "adityaraj1234@duck.com", href: "mailto:adityaraj1234@duck.com" },
-  { label: "GitHub", value: "github.com/dialga-cmd", href: "https://github.com/dialga-cmd" },
-  { label: "Website", value: "worldaditya.dev", href: "https://worldaditya.dev" },
+  { label: "Email", value: EMAIL, href: `mailto:${EMAIL}` },
+  { label: "GitHub", value: GITHUB.replace("https://", ""), href: GITHUB },
+  { label: "LinkedIn", value: "linkedin.com/in/aditya-raj-407a0740a", href: LINKEDIN },
+  { label: "Website", value: WEBSITE.replace("https://", ""), href: WEBSITE },
   { label: "Location", value: "Ranchi, India", href: null },
 ];
 
@@ -20,55 +21,45 @@ export default function Contact() {
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-emerald-100 sm:text-3xl">Let&apos;s build something.</h3>
         </div>
-        <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="flex flex-col gap-4">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {CARDS.map((card, idx) => (
-                <motion.div
-                  key={card.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.4, delay: idx * 0.05 }}
-                >
-                  {card.href ? (
-                    <a
-                      href={card.href}
-                      target={card.href.startsWith("http") ? "_blank" : undefined}
-                      rel={card.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="block rounded-lg border border-emerald-400/30 bg-black/40 p-4 transition hover:-translate-y-1 hover:border-emerald-400/60 hover:shadow-[0_0_40px_rgba(16,185,129,0.16)]"
-                    >
-                      <p className="text-xs uppercase tracking-[0.25em] text-emerald-400/70">{card.label}</p>
-                      <p className="mt-2 text-sm text-emerald-100">{card.value}</p>
-                    </a>
-                  ) : (
-                    <div className="rounded-lg border border-emerald-400/30 bg-black/40 p-4">
-                      <p className="text-xs uppercase tracking-[0.25em] text-emerald-400/70">{card.label}</p>
-                      <p className="mt-2 text-sm text-emerald-100">{card.value}</p>
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-            </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {CARDS.map((card, idx) => (
             <motion.div
+              key={card.label}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.4, delay: 0.2 }}
+              transition={{ duration: 0.4, delay: idx * 0.05 }}
             >
-              <a
-                href="/resume.pdf"
-                download
-                className="inline-flex items-center gap-2 rounded-full border border-emerald-400/70 px-6 py-2.5 text-sm text-emerald-100 transition hover:bg-emerald-400/10"
-              >
-                Download resume
-              </a>
+              {card.href ? (
+                <a
+                  href={card.href}
+                  target={card.href.startsWith("http") ? "_blank" : undefined}
+                  rel={card.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="block rounded-lg border border-emerald-400/30 bg-black/40 p-4 transition hover:-translate-y-1 hover:border-emerald-400/60 hover:shadow-[0_0_40px_rgba(16,185,129,0.16)]"
+                >
+                  <p className="text-xs uppercase tracking-[0.25em] text-emerald-400/70">{card.label}</p>
+                  <p className="mt-2 text-sm text-emerald-100">{card.value}</p>
+                </a>
+              ) : (
+                <div className="rounded-lg border border-emerald-400/30 bg-black/40 p-4">
+                  <p className="text-xs uppercase tracking-[0.25em] text-emerald-400/70">{card.label}</p>
+                  <p className="mt-2 text-sm text-emerald-100">{card.value}</p>
+                </div>
+              )}
             </motion.div>
-          </div>
-          <div className="flex justify-center">
-            <SectionPose name="contact" />
-          </div>
+          ))}
         </div>
+        <motion.div
+          className="mt-6"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.4, delay: 0.25 }}
+        >
+          <a href="/resume.pdf" download className="inline-flex items-center gap-2 rounded-full border border-emerald-400/70 px-6 py-2.5 text-sm text-emerald-100 transition hover:bg-emerald-400/10">
+            Download resume
+          </a>
+        </motion.div>
         <footer className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-emerald-400/20 pt-6 sm:flex-row">
           <p className="text-sm text-emerald-100/60">© 2026 Aditya Raj</p>
           <Link href="#hero" className="text-xs uppercase tracking-[0.25em] text-emerald-400/70">
