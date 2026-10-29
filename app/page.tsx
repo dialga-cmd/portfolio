@@ -5,6 +5,7 @@ import Skills from "./components/Skills";
 import OpenSource from "./components/OpenSource";
 import Projects from "./components/Projects";
 import Achievements from "./components/Achievements";
+import Gaming from "./components/Gaming";
 import Contact from "./components/Contact";
 
 export default function Home() {
@@ -29,6 +30,7 @@ export default function Home() {
       <OpenSource />
       <Projects />
       <Achievements />
+      <Gaming />
       <Contact />
     </main>
   );

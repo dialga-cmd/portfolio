@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { FEATURED_APPIDS, STEAM_PROFILE_URL, otherAchievements } from "@/data/steam";
 
 const NAV_LINKS = [
   { href: "#about", label: "About" },
@@ -10,6 +11,7 @@ const NAV_LINKS = [
   { href: "#opensource", label: "Open Source" },
   { href: "#projects", label: "Projects" },
   { href: "#achievements", label: "Achievements" },
+  { href: "#gaming", label: "Gaming" },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -17,11 +19,34 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
   const [open, setOpen] = useState(false);
+  const [showGaming, setShowGaming] = useState(false);
+
+  useEffect(() => {
+    if (FEATURED_APPIDS.length === 0 && !STEAM_PROFILE_URL && otherAchievements.length === 0) {
+      setShowGaming(false);
+      return;
+    }
+    fetch("/api/steam")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.ok && json.data) {
+          const d = json.data;
+          if (d.player || (d.featured && d.featured.length) || otherAchievements.length > 0) {
+            setShowGaming(true);
+          }
+        } else if (otherAchievements.length > 0) {
+          setShowGaming(true);
+        }
+      })
+      .catch(() => {
+        if (otherAchievements.length > 0) setShowGaming(true);
+      });
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 10);
-      const sections = NAV_LINKS.map((l) => l.href.slice(1));
+      const sections = (showGaming ? NAV_LINKS : NAV_LINKS.filter((l) => l.href !== "#gaming")).map((l) => l.href.slice(1));
       for (let i = sections.length - 1; i >= 0; i--) {
         const el = document.getElementById(sections[i]);
         if (el) {
@@ -36,7 +61,9 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [showGaming]);
+
+  const links = showGaming ? NAV_LINKS : NAV_LINKS.filter((l) => l.href !== "#gaming");
 
   return (
     <header
@@ -49,7 +76,7 @@ export default function Navbar() {
           ADITYA RAJ
         </Link>
         <div className="hidden items-center gap-6 md:flex">
-          {NAV_LINKS.map((link) => (
+          {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -86,13 +113,8 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden border-t border-emerald-400/20 bg-[#050d0a]/95 backdrop-blur-md">
           <div className="flex flex-col gap-3 px-6 py-4">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="text-sm text-emerald-100/80"
-              >
+            {links.map((link) => (
+              <Link key={link.href} href={link.href} onClick={() => setOpen(false)} className="text-sm text-emerald-100/80">
                 {link.label}
               </Link>
             ))}
